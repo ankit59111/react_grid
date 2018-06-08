@@ -1,0 +1,17 @@
+.navbar{
+    color: white;
+    background-color: darkorange;
+}
+.bg-mycolor{
+    background-color: darkorange;
+}
+.navbar-brand{
+    color: white;
+}
+.navbar-nav li{
+    color:white;
+}
+
+nav{
+    margin-bottom: 12px;
+}
