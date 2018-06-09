@@ -120,14 +120,14 @@ export default class FoodList extends Component {
     }
 
     subtractItems(index) {
-        let totalSum=0;
+        let totalSum=this.state.netSum;
         let order = this.state.order;
         let oldarray = this.state.foodArray;
-        oldarray[index].addedValue = oldarray[index].addedValue - 1;
         for(let i= 0;i<order.length;i++){
             if(order[i]['item'] == oldarray[index]['name']){
+                oldarray[index].addedValue = oldarray[index].addedValue - 1;
                 console.log('repeated')
-                if(!oldarray[index].addedValue){
+                if(oldarray[index].addedValue==0){
                     order.splice(i,1);
                     totalSum = this.state.netSum-oldarray[index].price;
                 }else{
@@ -136,6 +136,8 @@ export default class FoodList extends Component {
                     totalSum = this.state.netSum-oldarray[index].price;
                 }
 
+            }else{
+                console.log('do nothing');
             }
         }
         this.setState({
