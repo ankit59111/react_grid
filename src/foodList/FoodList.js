@@ -75,15 +75,15 @@ export default class FoodList extends Component {
 
         if (order.length !== 0) {
             let unique = true;
-            for (let i=0;i<order.length;i++){
-                if(order[i]['item'] == oldarray['name']){
+            for (let i = 0; i < order.length; i++) {
+                if (order[i]['item'] == oldarray['name']) {
                     console.log('repeated')
                     order[i]['qty'] = oldarray.addedValue;
-                    order[i]['price']= oldarray.price * oldarray.addedValue
+                    order[i]['price'] = oldarray.price * oldarray.addedValue
                     unique = false;
                 }
             }
-            if(unique){
+            if (unique) {
                 //console.log(order[i]['item'] + oldarray['name']);
                 console.log('not repeated')
                 order.push({
@@ -111,39 +111,45 @@ export default class FoodList extends Component {
         })
     }
 
-    addItems(index,item) {
+    addItems(index, item) {
 
         let oldarray = this.state.foodArray;
         oldarray[index].addedValue = oldarray[index].addedValue + 1;
         this.checkOrderList(index, item);
 
     }
+    componentWillMount(){
+        console.log(document.getElementById('addAnimation'))
+    }
 
     subtractItems(index) {
-        let totalSum=this.state.netSum;
+        let totalSum = this.state.netSum;
         let order = this.state.order;
         let oldarray = this.state.foodArray;
-        for(let i= 0;i<order.length;i++){
-            if(order[i]['item'] == oldarray[index]['name']){
+        for (let i = 0; i < order.length; i++) {
+            if (order[i]['item'] == oldarray[index]['name']) {
                 oldarray[index].addedValue = oldarray[index].addedValue - 1;
                 console.log('repeated')
-                if(oldarray[index].addedValue==0){
-                    order.splice(i,1);
-                    totalSum = this.state.netSum-oldarray[index].price;
-                }else{
+                if (oldarray[index].addedValue == 0) {
+                    document.getElementById('addAnimation').className='removeItem'
+                    console.log(document.getElementById('addAnimation'))
+                    order.splice(i, 1);
+                    totalSum = this.state.netSum - oldarray[index].price;
+                } else {
                     order[i]['qty'] = oldarray[index].addedValue;
-                    order[i]['price']= oldarray[index].price * oldarray[index].addedValue;
-                    totalSum = this.state.netSum-oldarray[index].price;
+                    order[i]['price'] = oldarray[index].price * oldarray[index].addedValue;
+                    totalSum = this.state.netSum - oldarray[index].price;
                 }
 
-            }else{
+            } else {
                 console.log('do nothing');
             }
         }
-        this.setState({
-            orders:order,
-            netSum:totalSum
-        })
+        setTimeout(this.setState({
+            orders: order,
+            netSum: totalSum
+        }),0)
+
     }
 
     render() {
@@ -171,30 +177,33 @@ export default class FoodList extends Component {
                         <div className="card-box">
                             {this.state.foodArray.map((item, index) => {
                                 return (
+                                    <div className="card-box individualCard">
                                     <div className="row" key={index} onClick={this.itemSelect.bind(this, item)}>
-                                        <div className="col-sm-9">
-                                            <div className="card-body">
-                                                <p>{item.name}</p>
-                                                <p id="itemDescription">{item.description}</p>
-                                                <p>${item.price}</p>
+
+                                            <div className="col-sm-9">
+                                                <div className="card-body">
+                                                    <p>{item.name}</p>
+                                                    <p id="itemDescription">{item.description}</p>
+                                                    <p>${item.price}</p>
+                                                </div>
+                                                <hr/>
                                             </div>
-                                            <hr/>
-                                        </div>
-                                        <div className="col-sm-3">
-                                            <div className="row">
-                                                <div className="col-sm-1">
-                                                    <button className="btn btn-primary "
-                                                            onClick={this.addItems.bind(this, index,item)}>+
-                                                    </button>
-                                                </div>
-                                                <div className="col-sm-1">
-                                                    <p className="value">{item.addedValue}</p>
-                                                </div>
-                                                <div className="col-sm-1">
-                                                    <button className="btn btn-primary Subtract"
-                                                            onClick={this.subtractItems.bind(this, index)
-                                                            }>-
-                                                    </button>
+                                            <div className="col-sm-3">
+                                                <div className="row addSubtract">
+                                                    <div className="col-sm-1">
+                                                        <button className="btn btn-primary "
+                                                                onClick={this.addItems.bind(this, index, item)}>+
+                                                        </button>
+                                                    </div>
+                                                    <div className="col-sm-1">
+                                                        <p className="value">{item.addedValue}</p>
+                                                    </div>
+                                                    <div className="col-sm-1">
+                                                        <button className="btn btn-primary Subtract"
+                                                                onClick={this.subtractItems.bind(this, index)
+                                                                }>-
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -209,7 +218,7 @@ export default class FoodList extends Component {
                         <div className="card-box">
                             {this.state.order.map(item => {
                                 return (
-                                    <p>
+                                    <p id="addAnimation" className="addItem">
                                         {item.item + ' X ' + item.qty + ' = ' + item.price}
                                     </p>
                                 )
